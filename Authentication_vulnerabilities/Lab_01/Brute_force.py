@@ -60,7 +60,6 @@ def cred_steal(url):
                 print("[+] Valid password %s " % j)
 
 
-
 def main():
     if len(sys.argv) != 2:
         print("[+] Usage: %s <url> " % sys.argv[0])
