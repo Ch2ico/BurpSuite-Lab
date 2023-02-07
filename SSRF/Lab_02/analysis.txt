@@ -1,0 +1,7 @@
+Lab #2 Basic SSRF against another back-end system
+
+info : - The stock feature is vulnerable
+
+End goal: Delete Carlos user using SSRF on an another back-end system
+
+STEP 1 : Enumerate the internal network

