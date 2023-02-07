@@ -1,0 +1,16 @@
+Lab #4 : Broken brute-force protection, IP block
+
+info:
+    - wiener:peter -> good creds
+    - username list
+    - password list
+    - There is an IP-based brute force protection in the header
+
+STEP1 Scrap the password
+
+STEP2: Bypass the Ip-based burte force protection
+#generate a random IP
+ip_parts = [random.randint(0, 255) for _ in range(4)]
+  return socket.inet_ntoa(bytes(ip_parts))
+#Changer l'ip pour chaque requête
+header = {'X-Forwarded-For': '%s' % random_ip}

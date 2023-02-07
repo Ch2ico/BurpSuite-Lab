@@ -1,0 +1,9 @@
+Lab #5: Username enumeration via account lock
+
+info:
+    - username list
+    - password list
+    - There is an IP-based brute force protection in the header
+    - a account locker
+
+STEP 1

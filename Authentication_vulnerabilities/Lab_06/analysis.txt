@@ -1,0 +1,26 @@
+Lab #6 : Broken brute-force protection, multiple credentials per request
+
+info:
+    - a valid username 'carlos'
+    - password list
+    - There is a user rate limited, limiting the time between several requests
+
+STEP 1: SCRAP The passwords
+- Get a list of passwords on Web security website
+
+STEP 2: Find a way to make several credential attempt in 1 HTTP request
+We have to use Json format to make it
+output: {"username": "carlos", "password": ["123456", "password", "123456789","111111", "1234567", "dragon"]}
+
+STEP 3: Make a request with the Json Format
+BAD Output: Internal Server Error
+Solution : The error was in the request format
+BAD request :  r = requests.post(url, json = json, verify=False, proxies=proxy )
+GOOD request: r = requests.post(url, data = json, verify=False, proxies=proxy )
+We don't need to format the Json data, it's already in the good format. Although it's good to make a request
+to see the initial format of the request
+[!] Stick to the methodology:
+    - I can't guess the type of reqest format
+    - Neither the technology used
+    - Be methodologic and keep it simple as possible
+

@@ -1,0 +1,18 @@
+Lab# 2: Username enumeration via subtly different responses
+- info:
+    - username_list
+    - password list
+
+Objective:
+    - Find the subtle change in the response
+    - Enumerate the username
+    - Brute force the password
+    - Log as the user
+
+STEP1: Enumerate the username to find the difference reponse:
+- Take the formal response and try to check any differences
+output:
+    - A bad user response : "Invalid username or password."
+    - A good user response: "Invalid username or password "
+
+STEP2: Brute force the password

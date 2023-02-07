@@ -1,0 +1,16 @@
+Lab #3: Username enumeration via response timing
+
+info:
+    - wiener:peter -> good creds
+    - username list
+    - password list
+    - There is an IP-based brute force protection in the header
+
+STEP1 : Find the protection parameter in the header
+We can use X-Forward-for to bypass the ip-bases brute force protection
+Used fonction in python : random.randint(0,255)
+
+STEP2 : Set a long password to increase the length of the server response
+In order to have the result of time/response. We use r.elapsed.total_seconds()
+
+STEP3 :

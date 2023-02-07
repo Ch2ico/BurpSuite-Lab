@@ -1,0 +1,19 @@
+Lab #1: Username enumeration via different responses
+
+info:
+    - Username wordlist
+    - Password wordlist
+
+End goal:
+    Enumerate valid username and password by Brute forcing
+
+STEP1: Scrappe the username list
+Done in Python
+
+STEP2: Check the response code of the server to enumerate valid username:
+Done in Python
+
+Remarks:
+- The enumeration was done with the r.text. The reponse from the server was giving an "Incorrect Password", Using this
+message we could target the right username
+- With the right username and password an HTTP CODE 300 was coming from the server
